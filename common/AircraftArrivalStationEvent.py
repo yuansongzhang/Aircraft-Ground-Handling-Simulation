@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Event import Event
-from Aircraft import Aircraft
+from aircraft import Aircraft
 
 class AircraftArrivalStationEvent(Event):
     def __init__(self,aircraft,arrivalStation,arrivalTimestamp,lastArrivalTimestamp,println):

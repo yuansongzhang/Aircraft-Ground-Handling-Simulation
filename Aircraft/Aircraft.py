@@ -33,12 +33,12 @@ class Aircraft:
         aircraftId = 0
         return Aircraft(aircraftId)
         
-    def getAircraftId(self):
-        return aircraftId
+    def getAircraftId(self): #可以直接调用参数吗？不定义方法
+        return self.aircraftId
 #    def getBlock(self):
 #        return block
     def getLastStation(self):
-        return lastStation
+        return self.lastStation
     def getLastStationArrivalTimestamp(self):
         return lastStationArrivalTimestamp
     def getNextStation(self):
