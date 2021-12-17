@@ -30,6 +30,9 @@ class GatePosition(): #停机位
     def getId(self):
         return self.id
     
+    def getODType(self):
+        return self.odType
+    
     def setAirport(self,airport):
         self.airport=airport
         
@@ -38,6 +41,9 @@ class GatePosition(): #停机位
         
     def setId(self,id):
         self.id=id
+    
+    def setODType(self,odType):
+        self.odType=odType
 
         
         

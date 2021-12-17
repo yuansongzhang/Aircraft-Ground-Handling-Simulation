@@ -5,10 +5,13 @@
 """
 import GatePosition  需要吗？？
 """
-class Section():
-    def __init__(self,type,scheduledDepartureTime,scheduledArrivalTime,
+from Line import Line
+
+class Section(): #其中没有type（到港离港  0到港 1离港）
+    def __init__(self,scheduledDepartureTime,scheduledArrivalTime,
                  origin,destination,realDepartureTime,realArrivalTime):
-        self.type=type      #到港离港  0到港 1离港
+        #这里面参数可能有点多
+        #self.type=type      #到港离港  0到港 1离港
         self.scheduledDepartureTime=scheduledDepartureTime #预计离开时间
         self.scheduledArrivalTime=scheduledArrivalTime #预计到达时间
         self.origin=origin #出发地
@@ -16,19 +19,20 @@ class Section():
         self.realDepartureTime=realDepartureTime #实际离开时间，前期用不到
         self.realArrivalTime=realArrivalTime #实际到达时间，前期用不到
         
-    def getInstance(self):
-        type=1 #离港
-        scheduledDepartureTime="2021-1-1 00:00:00"
-        scheduledArrivalTime="2021-1-1 03:00:00"
-        origin="pudong"
-        destination="hongqiao"
-        realDepartureTime="2021-1-1 00:00:00"
-        realArrivalTime="2021-1-1 03:00:00"
-        return Section(type,scheduledDepartureTime,scheduledArrivalTime,
+    def getInstance(self,line): #参数里需要加line吗？？？？？
+        #type=1 #离港
+        #line=Line(1)
+        scheduledDepartureTime=0
+        scheduledArrivalTime=2
+        origin=line.getOriginGatePositions()
+        destination=line.getDestinationGatePositions()
+        realDepartureTime=0
+        realArrivalTime=2
+        return Section(scheduledDepartureTime,scheduledArrivalTime,
                        origin,destination,realDepartureTime,realArrivalTime)
     
-    def getType(self):
-        return self.type
+    #def getType(self):
+    #    return self.type
     
     def getScheduledDepartureTime(self):
         return self.scheduledDepartureTime

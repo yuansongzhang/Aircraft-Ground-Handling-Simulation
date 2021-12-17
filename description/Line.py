@@ -6,18 +6,21 @@ main函数需要吗
 
 """
 
-import GatePosition
+from GatePosition import GatePosition
 import csv
 
 
-class Line():
+class Line(): #包含单独离开/到达，离开和到达
     def __init__(self,GatePositions):
         self.GatePositions=GatePositions
         self.GatePositionNum=len(self.GatePositions)
         
     def getOriginGatePositions(self):
         return self.GatePositions[0]
-    #还有一些get没写
+
+    def getDestinationGatePositions(self):
+        return self.GatePositions[1]
+        #还有一些get没写
     
     def getInstance(self):
         #GatePositionNum=2
