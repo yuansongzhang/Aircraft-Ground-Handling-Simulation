@@ -3,7 +3,7 @@
 # Press Shift+F10 to execute it or replace it with your code.
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
-from aircraft import Aircraft
+from Aircraft import Aircraft
 from Algorithm import Algorithm
 from vehicle import Vehicle1
 
@@ -21,7 +21,7 @@ def main():
     vehicle = Vehicle1()
     algorithm = Algorithm()
     Object = [aircraft,vehicle,algorithm]
-    triggeringTimestamp = 
+    triggeringTimestamp = 100
     
     for obj in Object:
         if obj.event.triggeringTimestamp < triggeringTimestamp:
