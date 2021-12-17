@@ -6,44 +6,46 @@ import math
 class Vehicle1:
     "牵引车类"
     def __init__(self,name,v,x,y,ServiceStatus,PreparationTime,
-                 ServiceTime,NextGate,Time,eventList): 
+                 ServiceTime,NextGatePosition,Time,eventList): 
         self.eventList=eventList
-        self.Time=Time
-        self.NextGate=NextGate
+        self.Time=Time                              #开始时间
+        self.NextGatePosition=NextGatePosition
         self.name=name
-        self.v=v
+        self.v=v                                    #速度
         self.x=x;
         self.y=y;
         self.ServiceStatus=ServiceStatus;           #服务状态
         self.ServiceTime=ServiceTime;               #服务时间
         self.PreparationTime=PreparationTime;       #准备时长
     def run(self,Time):
-        self.ServiceStatus=1;
+        self.ServiceStatus=1;                       #在服务
         self.Time=Time;
         
     def finish(self,Time):
-        self.ServiceStatus=0;
+        self.ServiceStatus=0;                       #结束服务
         self.Time=Time;
         
-    def St(self):
+    def serviceTime(self):
         self.ServiceTime=random.uniform(10,20);  
         return self.ServiceTime
         
     def distance(self,x,y):
-        self.d=math.sqrt((self.x-x)^2+(self.y-y)^2) 
+        # x=
+        # y=
+        self.d=math.sqrt((self.x-x)^2+(self.y-y)^2) #两个x和y没有标明确，也没有写得到机位xy的函数
         
-    def generateVehicle1ArrivalEvent(self,println):
-        event = common.VehicleArriveEvent(Vehicle1)
+    def generateVehicle1ArrivalGatePositionEvent(self,println):
+        event = common.VehicleArrivalGatePositionEvent(Vehicle1)
         self.eventList.add(event)
         self.currentEvent = event
             
-    def generateVehicle1ServiceStationEvent(self,println):
+    def generateVehicle1ServiceEvent(self,println):
         event = common.VehicleServiceEvent(Vehicle1)
         self.eventList.add(event)
         self.currentEvent = event
         
-    def generateAircraftDepartureStationEvent(self,println):
-        event = common.VehicleDepartureEvent(Vehicle1)
+    def generateVehicle1DepartureGatePositionEvent(self,println):
+        event = common.VehicleDepartureGatePositionEvent(Vehicle1)
         self.eventList.add(event)
         self.currentEvent = event
         
