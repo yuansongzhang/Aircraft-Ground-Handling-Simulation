@@ -1,23 +1,25 @@
-from vehicle import Vehicle1
-from aircraft import Aircraft
+from vehicle import vehicle1
+from aircraft import aircraft
 from common import Event
 
 class VehicleServiceEvent(Event):
     "服务事件"
-    def __init__(self,Vehicle1,Aircraft,servStartTimestamp,servFinishTimestamp):
-        self.Vehicle1=Vehicle1;
-        self.servStartTimestamp = servStartTimestamp
-        self.servFinishTimestamp = servFinishTimestamp
-        self.Aircraft = Aircraft
+    def __init__(self,vehicle1,aircraft,serviceStartTimestamp,serviceFinishTimestamp):
+        self.vehicle1=vehicle1
+        self.aircraft = aircraft
+        self.serviceStartTimestamp = serviceStartTimestamp
+        self.serviceFinishTimestamp = serviceFinishTimestamp
+        
     
     def update(self):
-        self.servStartTimestamp = self.Aircraft.getNextStationArrivalTimestamp()
-        self.triggeringTimestamp = self.servStartTimestamp
+        self.serviceStartTimestamp = self.aircraft.getNextGatePositionArrivalTimestamp()
+        self.triggeringTimestamp = self.serviceStartTimestamp
         
     def execute(self):
-        self.Vehicle1.finish()
-        self.servFinishTimestamp = self.servStartTimestamp+self.Vehicle1.St()
+        self.vehicle1.finish()
+        self.serviceFinishTimestamp = self.serviceStartTimestamp+self.vehicle1.ServiceTime()
         
-        
+#    generates next event.
+        # self.vehicle1.generateVehicleDepartureEvent(self.print)
     
     
