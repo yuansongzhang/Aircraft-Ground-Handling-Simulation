@@ -6,16 +6,16 @@ Created on Tue Dec 14 22:06:30 2021
 """
 
 class Aircraft:
-    def __init__(self,aircraftId,lastStation,lastStationArrivalTimestamp,lastStationDepartureTimestamp,
-                 nextStation,nextStationArrivalTimestamp,nextStationDepartureTimestamp,eventList,
+    def __init__(self,aircraftId,lastGatePosition,lastGatePositionArrivalTimestamp,lastGatePositionDepartureTimestamp,
+                 nextGatePosition,nextGatePositionArrivalTimestamp,nextGatePositionDepartureTimestamp,eventList,
                  block,println):
         self.aircraftId = aircraftId
-        self.lastStation = lastStation  #停机位
-        self.lastStationArrivalTimestamp = lastStationArrivalTimestamp
-        self.lastStationDepartureTimestamp = lastStationDepartureTimestamp
-        self.nextStation = nextStation
-        self.nextStationArrivalTimestamp = nextStationArrivalTimestamp
-        self.nextStationDepartureTimestamp = nextStationDepartureTimestamp
+        self.lastGatePosition = lastGatePosition  #停机位
+        self.lastGatePositionArrivalTimestamp = lastGatePositionArrivalTimestamp
+        self.lastGatePositionDepartureTimestamp = lastGatePositionDepartureTimestamp
+        self.nextGatePosition = nextGatePosition
+        self.nextGatePositionArrivalTimestamp = nextGatePositionArrivalTimestamp
+        self.nextGatePositionDepartureTimestamp = nextGatePositionDepartureTimestamp
         self.eventList = eventList
         self.aircraftId = aircraftId
         self.block = block
@@ -23,9 +23,9 @@ class Aircraft:
         #        self.tripNum = 0 
         #        self.sectionNum = 0
         self.eventList = list()
-        self.lastStation = self.getCurrentSection().getOrigin()
-        self.nextStation = self.getCurrentSection().getDestination()
-        self.generateAircraftDepartureStationEvent(println)
+        self.lastGatePosition = self.getCurrentSection().getOrigin()
+        self.nextGatePosition = self.getCurrentSection().getDestination()
+        self.generateAircraftDepartureGatePositionEvent(println)
         
 
         
@@ -37,49 +37,49 @@ class Aircraft:
         return self.aircraftId
 #    def getBlock(self):
 #        return block
-    def getLastStation(self):
-        return self.lastStation
-    def getLastStationArrivalTimestamp(self):
-        return lastStationArrivalTimestamp
-    def getNextStation(self):
-        return nextStation
+    def getLastGatePosition(self):
+        return self.lastGatePosition
+    def getLastGatePositionArrivalTimestamp(self):
+        return lastGatePositionArrivalTimestamp
+    def getNextGatePosition(self):
+        return nextGatePosition
     def getEventList(self):
         return eventList
     def getCurrentEvent(self):
         return self.currentEvent
-    def getNextStationArrivalTimestamp(self):
-        return self.nextStationArrivalTimestamp
+    def getNextGatePositionArrivalTimestamp(self):
+        return self.nextGatePositionArrivalTimestamp
     
     # 生成事件后更新事件
-    def generateBusArrivalStationEvent(self,println):
-        event = BusArrivalStationEvent(self,println)
+    def generateBusArrivalGatePositionEvent(self,println):
+        event = BusArrivalGatePositionEvent(self,println)
         self.eventList.add(event)
         self.currentEvent = event
         
-    def aircraftArrivalStationEventUpdate(self):
+    def aircraftArrivalGatePositionEventUpdate(self):
 #        updates section.
-        self.getLastSection().setRealArrivalTime(self.getNextStationArrivalTimestamp())
+        self.getLastSection().setRealArrivalTime(self.getNextGatePositionArrivalTimestamp())
 #        updates the aircraft's parameters.
-        self.lastStationArrivalTimestamp = self.getNextStationArrivalTimestamp()
-        self.lastStation = self.nextStation
+        self.lastGatePositionArrivalTimestamp = self.getNextGatePositionArrivalTimestamp()
+        self.lastGatePosition = self.nextGatePosition
         #???如何写
         
-    def generateAircraftStoppingStationEvent(self,println):
-        event = AircraftStoppingStationEvent(self, println)
+    def generateAircraftStoppingGatePositionEvent(self,println):
+        event = AircraftStoppingGatePositionEvent(self, println)
         self.eventList.add(event)
         self.currentEvent = event
         
-    def aircraftStoppingStationEventUpdate(self):
+    def aircraftStoppingGatePositionEventUpdate(self):
 #        updates the aircraft's parameters.
         #???如何写
         
-    def generateAircraftDepartureStationEvent(self,println):
-        event = AircraftDepartureStationEvent(self,println)
+    def generateAircraftDepartureGatePositionEvent(self,println):
+        event = AircraftDepartureGatePositionEvent(self,println)
         self.eventList.add(event)
 #        update currentEvent.
         self.currentEvent = event
         
-    def aircraftDepartureStationEventUpdate(self):
+    def aircraftDepartureGatePositionEventUpdate(self):
 #        updates the aircraft's parameters.
        #???如何写
        
@@ -88,11 +88,15 @@ class Aircraft:
         self.eventList.add(event)
         self.currentEvent = event
         
+     def aircraftFinishingTripEventUpdate(self):
+ #        updates the aircraft's parameters.
+        #???如何写
+        
     def info(self):
         
-    def infoAircraftDepartureStationEvent(self):
+    def infoAircraftDepartureGatePositionEvent(self):
     
-    def infoAircraftArrivalStationEvent(self):
+    def infoAircraftArrivalGatePositionEvent(self):
         
 
 
