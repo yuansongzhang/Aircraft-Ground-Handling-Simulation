@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-from abc import ABCMeta, abstractmethod, ABC
-
-from aircraft import Aircraft
+from abc import ABCMeta, abstractmethod
 
 
 class Event:
     __meta_class__ = ABCMeta
 
     def __init__(self):
-        self.__triggering_timestamp = None
+        self._triggering_timestamp = None
 
     @abstractmethod
     def update(self, *args, **kwargs):
@@ -18,111 +16,54 @@ class Event:
     def execute(self, *args, **kwargs):
         pass
 
+    def get_triggering_timestamp(self):
+        return self._triggering_timestamp
+
 
 class AircraftDepartureGatePositionEvent(Event):
-    def __init__(self):
+    def __init__(self, aircraft):
         super().__init__()
-        self.__aircraft = None
+        self.__aircraft = aircraft
         self.__departure_gate_position = None
         self.__departure_timestamp = None
-        self.__next_gate_position_arrival_timestamp = None
+        self.update()
 
-    def update(self, aircraft: Aircraft):  # aircraft
-        self.__aircraft = aircraft
-        # self.__triggering_timestamp = aircraft.getScheduledDepartureTime()
+    def update(self):
+        aircraft = self.__aircraft
+        # todo: interaction with vehicles, random travel time
+        self._triggering_timestamp = aircraft.get_flight().get_scheduled_departure_time()
+        self.__departure_gate_position = aircraft.get_flight().get_origin()
+        self.__departure_timestamp = self._triggering_timestamp
 
     def execute(self):
-        pass
-        # #    updates aircraft.
-        # self.aircraft.aircraftDepartureStationEventUpdate()
-        #
-        # #    generates next event.
-        # self.aircraft.generateaircraftArrivalStationEvent(self.print)
+        # updates aircraft.
+        self.__aircraft.get_flight().set_real_departure_time(self.__departure_timestamp)
+        self.__aircraft.aircraft_departure_gate_position_event_update()
+        # generates next event.
+        self.__aircraft.generate_arrival_gate_position_event()
 
 
 class AircraftArrivalGatePositionEvent(Event):
-    def __init__(self, aircraft, arrivalGatePosition, arrivalTimestamp, lastArrivalTimestamp, println):
-        self.aircraft = aircraft  # 航班
-        self.arrivalGatePosition = arrivalGatePosition
-        self.arrivalTimestamp = arrivalTimestamp
-        self.lastArrivalTimestamp = lastArrivalTimestamp
-        if self.println == 1:
-            print("--------------------------------------------")
-            print("Generate " + type(self).__name__)
-        self.upate(aircraft)
+    def __init__(self, aircraft):
+        super().__init__()
+        self.__aircraft = aircraft
+        self.__arrival_gate_position = None
+        self.__arrival_timestamp = None
+        self.__last_arrival_timestamp = None
+        self.update()
 
-    # 更新事件
-    def update(self):  #
-        self.triggeringTimestamp = Aircraft.getNextGatePositionArrivalTimestamp()
-        self.arrivalGatePosition = Aircraft.getNextGatePosition();
-        self.arrivalTimestamp = self.triggeringTimestamp;
-        if self.println == 1:
-            self.arrivalGatePosition.info()
-            self.aircraft.infoAircraftArrivalGatePositionEvent()
-
-    # 执行事件
-    def execute(self):
-        #    updates Aircraft.更新航班执行事件
-        self.Aircraft.AircraftArrivalGatePositionEventUpdate()
-
-        #    generates next event.生成下一个事件
-        self.Aircraft.generateAircraftStoppingGatePositionEvent(self.println)
-
-
-class AircraftFinishingFlightEvent(Event):
-    def __init__(self, aircraft, println):
-        self.aircraft = aircraft
-        # 还要写什么？？？
-
-        if self.println == 1:
-            print("--------------------------------------------")
-            print("Generate " + type(self).__name__)
-        self.upate(aircraft)
-
-    # 更新事件
-    def update(self):  #
-        self.triggeringTimestamp = Aircraft.getStoppingStationTimestamp()  # +vehicle???
-
-    # 执行事件
-    def execute(self):
-        #    updates Aircraft.更新航班执行事件
-        self.Aircraft.AircraftFinishingTripEventUpdate()
-
-        #    generates next event.生成下一个事件
-        self.Aircraft.generateAircraftStoppingStationEvent(self.println)
-
-
-class AircraftLayoverGatePositionEvent(Event):
-
-    def __init__(self, stoppingStation):
-        self.stoppingStation = stoppingStation
-
-    def AircraftStoppingStationEvent(self, aircraft, println):
-        self.println = println
-        if self.println == 1:
-            print("--------------------------------------------")
-            print("Generate " + type(self).__name__)
-
-        self.update(aircraft)
-
-    def update(self, **kwargs):  # aircraft
-        pass
-        # self.aircraft = aircraft
-        # self.triggeringTimestamp = aircraft.getLastStationArrivalTimestamp()
-        # self.station = aircraft.getLastStation()
-        #
-        # if self.println == 1:
-        #     self.arrivalStation.info()
-        #     self.aircraft.infoAircraftArrivalStationEvent()
-        #
-        # self.update(self.aircraft)
+    def update(self):
+        aircraft = self.__aircraft
+        # todo: interaction with vehicles
+        self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time()
+        self.__arrival_gate_position = aircraft.get_flight().get_destination()
+        self.__arrival_timestamp = self._triggering_timestamp
 
     def execute(self):
-        #    updates Aircraft.
-        self.Aircraft.AircraftStoppingStationEventUpdate()
-
-        #    generates next event.
-        self.Aircraft.generateAircraftDepartureStationEvent(self.println)
+        # updates aircraft.
+        self.__aircraft.get_flight().set_real_arrival_time(self.__arrival_timestamp)
+        self.__aircraft.aircraft_arrival_gate_position_event_update()
+        # ends with arrival gate position and does not generate any event.
 
 
 class VehicleArrivalGatePositionEvent(Event):

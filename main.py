@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
+from description import *
+from aircraft import Aircraft
+from common import EventDispatcher
+
 
 def main():
-    print("It's time to start coding! Come on, guys!")
+    pass
 
 
 if __name__ == '__main__':
