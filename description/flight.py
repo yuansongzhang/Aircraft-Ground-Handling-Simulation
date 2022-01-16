@@ -20,6 +20,13 @@ class Flight:  # 类似原文件中trip
         self.__real_departure_time = None  # 实际离开时间，前期用不到
         self.__real_arrival_time = None  # 实际到达时间，前期用不到
         # self.__layover_time = layover_time  # 飞机可以停留时间
+        self.__server = None  # 提供服务的地勤车辆
+
+    def get_server(self):
+        return self.__server
+
+    def set_server(self, server):
+        self.__server = server
 
     def set_real_departure_time(self, real_departure_time):
         self.__real_departure_time = real_departure_time
@@ -29,12 +36,6 @@ class Flight:  # 类似原文件中trip
 
     def get_category(self):  # type到港离港
         return self.__category
-
-    def getLeisureTime(self):
-        return self.__layover_time
-
-    def get_layover_time(self):
-        return self.__layover_time
 
     def get_scheduled_departure_time(self):
         return self.__scheduled_departure_time

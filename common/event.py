@@ -54,7 +54,11 @@ class AircraftArrivalGatePositionEvent(Event):
     def update(self):
         aircraft = self.__aircraft
         # todo: interaction with vehicles
-        self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time()
+        if aircraft.get_flight().get_category() == 1:
+            self._triggering_timestamp = aircraft.get_flight().get_scheduled_departure_time()
+        else:
+            self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time()
+        assert self._triggering_timestamp is not None
         self.__arrival_gate_position = aircraft.get_flight().get_destination()
         self.__arrival_timestamp = self._triggering_timestamp
 
@@ -132,22 +136,37 @@ class VehicleServiceEvent(Event):
 
 
 class GroundHandlingDispatchEvent(Event):
-    def __init__(self):
+    def __init__(self, ground_handling):
         super().__init__()
+        self.__ground_handling = ground_handling
+        self.__dispatch_time = None
+        self.update()
 
-    def update(self, *args, **kwargs):
-        pass
+    def update(self):
+        ground_handling = self.__ground_handling
+        self._triggering_timestamp = ground_handling.get_last_dispatch_time() + ground_handling.get_dispatch_interval()
+        self.__dispatch_time = self._triggering_timestamp
 
-    def execute(self, *args, **kwargs):
-        pass
+    def execute(self):
+        # updates ground handling.
+        self.__ground_handling.set_dispatch_time(self.__dispatch_time)
+        self.__ground_handling.dispatch_event_update()
+        # generates next event.
+        self.__ground_handling.generate_waiting_event()
 
 
 class GroundHandlingWaitingEvent(Event):
-    def __init__(self):
+    def __init__(self, ground_handling):
         super().__init__()
+        self.__ground_handling = ground_handling
+        self.update()
 
     def update(self, *args, **kwargs):
-        pass
+        ground_handling = self.__ground_handling
+        self._triggering_timestamp = ground_handling.get_dispatch_time()
 
     def execute(self, *args, **kwargs):
-        pass
+        # updates ground handling.
+        self.__ground_handling.waiting_event_update()
+        # generates next event.
+        self.__ground_handling.generate_dispatch_event()
