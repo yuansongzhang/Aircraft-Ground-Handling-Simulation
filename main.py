@@ -2,6 +2,7 @@
 from description import *
 from aircraft import Aircraft
 from common import EventDispatcher
+from vehicle import Vehicle
 
 
 def main():

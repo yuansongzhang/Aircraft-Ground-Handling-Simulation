@@ -3,6 +3,7 @@ import unittest
 from description import *
 from aircraft import Aircraft
 from common import EventDispatcher
+from vehicle import Vehicle
 
 
 def get_aircraft():
@@ -45,13 +46,40 @@ def aircraft_test():
         first_event.update()
         first_event.execute()
         print(first_event)
-    print('Good!')
+    print('Aircraft test pass.')
+    return True
+
+
+def vehicle_test():
+    gate_position1 = GatePosition('PD', 0, '001')
+    gate_position2 = GatePosition('PD', 0, '002')
+    gate_position3 = GatePosition('PD', 0, '003')
+    trip1 = Trip(task_release_time=6, destination=gate_position2)
+    trip2 = Trip(task_release_time=6, destination=gate_position3)
+    trip3 = Trip(task_release_time=6, destination=gate_position1)
+
+    veh = Vehicle(gate_position1)
+    for trip in [trip1, trip2, trip3]:
+        print(veh.get_origin().get_id())
+        # assigns trips
+        veh.set_trip(trip)
+        veh.generate_departure_gate_position_event()
+        while veh.get_trip() is not None:
+            event = veh.get_current_event()
+            event.update()
+            event.execute()
+            print(event)
+        print(veh.get_origin().get_id())
+    print('Vehicle test pass.')
     return True
 
 
 class MyTestCase(unittest.TestCase):
     def test_aircraft(self):
         self.assertEqual(True, aircraft_test())  # add assertion here
+
+    def test_vehicle(self):
+        self.assertEqual(True, vehicle_test())  # add assertion here
 
 
 if __name__ == '__main__':
