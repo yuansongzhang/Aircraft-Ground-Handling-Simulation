@@ -41,27 +41,27 @@ def get_aircraft_and_vehicle():
     return [aircraft1, aircraft2], [veh1, veh2]
 """
 
-def get_aircraft():
-    virtual_gate_position = GatePosition('Virtual', 0, '001', 10, 10)
-    gate_position1 = GatePosition('PD', 0, '001', 10, 10)
-    gate_position2 = GatePosition('HQ', 0, '002', 10, 10)
+# def get_aircraft():
+#     virtual_gate_position = GatePosition('Virtual', 0, '001', 10, 10)
+#     gate_position1 = GatePosition('PD', 0, '001', 10, 10)
+#     gate_position2 = GatePosition('HQ', 0, '002', 10, 10)
 
-    flight1 = Flight(category=0,  # Arrival
-                     scheduled_departure_time=None,
-                     scheduled_arrival_time=8 * 60,
-                     local_gate_position=virtual_gate_position,
-                     other_gate_position=gate_position1,
-                     )
-    aircraft1 = Aircraft(aircraft_id='MU9712', flight=flight1, status=0)
+#     flight1 = Flight(category=0,  # Arrival
+#                      scheduled_departure_time=None,
+#                      scheduled_arrival_time=8 * 60,
+#                      local_gate_position=virtual_gate_position,
+#                      other_gate_position=gate_position1,
+#                      )
+#     aircraft1 = Aircraft(aircraft_id='MU9712', flight=flight1, status=0)
 
-    flight2 = Flight(category=1,  # Departure
-                     scheduled_departure_time=9 * 60,
-                     scheduled_arrival_time=None,
-                     local_gate_position=virtual_gate_position,
-                     other_gate_position=gate_position2,
-                     )
-    aircraft2 = Aircraft(aircraft_id='MU9713', flight=flight2, status=0)
-    return [aircraft1, aircraft2]
+#     flight2 = Flight(category=1,  # Departure
+#                      scheduled_departure_time=9 * 60,
+#                      scheduled_arrival_time=None,
+#                      local_gate_position=virtual_gate_position,
+#                      other_gate_position=gate_position2,
+#                      )
+#     aircraft2 = Aircraft(aircraft_id='MU9713', flight=flight2, status=0)
+#     return [aircraft1, aircraft2]
 
 """
 def aircraft_test():
