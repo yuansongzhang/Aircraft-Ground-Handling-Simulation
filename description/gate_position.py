@@ -1,25 +1,33 @@
 # -*- coding: utf-8 -*-
 
 class GatePosition:  # 停机位
-    def __init__(self, odType, airport, category, id):
+    def __init__(self, airport, category, id, x, y):
         self.__airport = airport  # 所属机场
         self.__category = category  # 远近机位 0近机位，1远机位
         self.__id = id  # 机位号 012345 0近机位，其它远机位
-
+        self.__x = x
+        self.__y = y
+        
+    def get_x(self):
+        return self.__x
+    
+    def get_y(self):
+        return self.__y
+    
     def get_airport(self):
         return self.__airport
 
-    def getType(self):
+    def get_category(self):
         return self.__category
 
-    def getId(self):
+    def get_id(self):
         return self.__id
 
-    def setAirport(self, airport):
+    def set_airport(self, airport):
         self.__airport = airport
 
-    def setType(self, category):
+    def set_category(self, category):
         self.__category = category
 
-    def setId(self, id):
+    def set_id(self, id):
         self.__id = id
