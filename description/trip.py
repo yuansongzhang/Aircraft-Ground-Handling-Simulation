@@ -6,69 +6,75 @@ class Trip:
     """The instance of Trip class is produced by GroundHandling class."""
 
     def __init__(self,
-                 task_release_timestamp,
+                 task_release_time,
                  #destination: GatePosition,
                  destination_x,
                  destination_y
                  ):
-        self.__task_release_timestamp = task_release_timestamp
+        self.__task_release_time = task_release_time
         self.__destination_x = destination_x
         self.__destination_y = destination_y
-        self.__departure_timestamp = None
-        self.__arrival_timestamp = None
+        self.__departure_time = None
+        self.__arrival_time = None
         self.__service_time = None
-        self.__service_finish_timestamp = None
+        self.__service_start_time = None
+        self.__service_finish_time = None
         self.__prepare_time = None
-        self.__prepare_finish_timestamp = None
-        self.__prepare_start_timestamp = None
-        self.__status_turn_to_0_timestamp = None
-        
-        
-    def set_status_turn_to_0_timestamp(self, status_turn_to_0_timestamp):
-        self.__status_turn_to_0_timestamp = status_turn_to_0_timestamp
+        self.__prepare_finish_time = None
+        self.__prepare_start_time = None
+        self.__status_turn_to_0_time = None
     
-    def get_status_turn_to_0_timestamp(self):
-        return self.__status_turn_to_0_timestamp
+    def set_service_start_time(self, service_start_time):
+        self.__service_start_time = service_start_time
     
-    def set_prepare_start_timestamp(self, prepare_start_timestamp):
-        self.__prepare_start_timestamp = prepare_start_timestamp
+    def get_service_start_time(self):
+        return self.__service_start_time
         
-    def get_prepare_start_timestamp(self):
-        return self.__prepare_start_timestamp
+    def set_status_turn_to_0_time(self, status_turn_to_0_time):
+        self.__status_turn_to_0_time = status_turn_to_0_time
+    
+    def get_status_turn_to_0_time(self):
+        return self.__status_turn_to_0_time
+    
+    def set_prepare_start_time(self, prepare_start_time):
+        self.__prepare_start_time = prepare_start_time
+        
+    def get_prepare_start_time(self):
+        return self.__prepare_start_time
 
-    def set_arrival_timestamp(self, arrival_timestamp):
-        self.__arrival_timestamp = arrival_timestamp
+    def set_arrival_time(self, arrival_time):
+        self.__arrival_time = arrival_time
         
-    def get_arrival_timestamp(self):
-        return self.__arrival_timestamp
+    def get_arrival_time(self):
+        return self.__arrival_time
 
-    def set_departure_timestamp(self, departure_timestamp):
-        self.__departure_timestamp = departure_timestamp
+    def set_departure_time(self, departure_time):
+        self.__departure_time = departure_time
     
-    def get_depature_timestamp(self):
-        return self.__departure_timestamp
+    def get_depature_time(self):
+        return self.__departure_time
     def get_service_time(self):
         return self.__service_time
     def set_service_time(self, service_time):
         self.__service_time = service_time
         
-    def set_service_finish_timestamp(self, service_finish_timestamp):
-        self.__service_finish_timestamp = service_finish_timestamp
+    def set_service_finish_time(self, service_finish_time):
+        self.__service_finish_time = service_finish_time
         
     def set_prepare_time(self, prepare_time):
         self.__prepare_time = prepare_time
         
-    def set_prepare_finish_timestamp(self, prepare_finish_timestamp):
-        self.__prepare_finish_timestamp = prepare_finish_timestamp
+    def set_prepare_finish_time(self, prepare_finish_time):
+        self.__prepare_finish_time = prepare_finish_time
         
-    def get_service_finish_timestamp(self):
-        return self.__service_finish_timestamp
+    def get_service_finish_time(self):
+        return self.__service_finish_time
     
-    def get_prepare_finish_timestamp(self):
-        return self.__prepare_finish_timestamp
+    def get_prepare_finish_time(self):
+        return self.__prepare_finish_time
 
-    def get_task_release_timestamp(self):
-        return self.__task_release_timestamp
+    def get_task_release_time(self):
+        return self.__task_release_time
     
     def get_destination_x(self):
         return self.__destination_x
@@ -81,8 +87,8 @@ class Trip:
         return self.__destination
     """
     
-    def get_departure_timestamp(self):
-        return self.__departure_timestamp
+    def get_departure_time(self):
+        return self.__departure_time
 
-    def get_arrival_timestamp(self):
-        return self.__arrival_timestamp
+    def get_arrival_time(self):
+        return self.__arrival_time

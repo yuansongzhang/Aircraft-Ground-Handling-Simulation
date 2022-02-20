@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from common import VehicleServiceEvent
+from common import VehicleOtherServiceEvent
 from common import VehicleDepartureGatePositionEvent
 from common import VehicleArrivalGatePositionEvent
 from common import VehicleServiceFinishEvent
@@ -8,7 +8,7 @@ from common import VehicleStatusTurnTo0Event
 
 
 
-class Vehicle:
+class VehicleJiayou:
     def __init__(self,name,v,x,y,aircraft,timestamp,servicestatus):  #x,y,aircraft,timestamp,servicestatus需要变
         self.__name=name;
         self.__v=v;
@@ -21,7 +21,7 @@ class Vehicle:
         self.__trip = None
         self.__event_list = list()
         self.__current_event=None
-        self.__vehicle_type=1 #牵引车为1
+        self.__vehicle_type = 3 #加油车为3
     """  
     def __init__(self, origin):
         self.__origin = origin
@@ -74,7 +74,6 @@ class Vehicle:
     def generate_departure_gate_position_event(self):
         event = VehicleDepartureGatePositionEvent(self)
         self.__event_list.append(event)
-        # update currentEvent.
         self.__current_event = event
         self.__servicestatus = 1
         
@@ -84,7 +83,6 @@ class Vehicle:
     def generate_arrival_gate_position_event(self):
         event = VehicleArrivalGatePositionEvent(self)
         self.__event_list.append(event)
-        # update currentEvent.
         self.__current_event = event
 
     def arrival_gate_position_event_update(self):
@@ -93,22 +91,18 @@ class Vehicle:
         self.__timestamp = self.__trip.get_arrival_time()
 
     def generate_service_event(self):
-        event = VehicleServiceEvent(self)
+        event = VehicleOtherServiceEvent(self)
         self.__event_list.append(event)
-        # update currentEvent.
         self.__current_event = event
 
     def service_event_update(self):
       if self.__trip.get_service_time()==0:
-         #self.__aircraft.set_status(1) #???????
-         self.__aircraft.set_qianyin_status(1)
+         #self.__aircraft.set_status(1) #????????
+         self.__aircraft.set_jiayou_status(1)
          if self.__aircraft.get_flight().get_category()==0:
            self.__aircraft.get_flight().set_scheduled_arrival_time()
          else:
            self.__aircraft.get_flight().set_scheduled_departure_time()
-      else:
-          if self.__aircraft.get_flight().get_category()==0:#到港，在牵引车服务一开始飞机就可以进行到港
-            self.__aircraft.set_arrive_qianyin_start_timestamp(self.__trip.get_service_start_time())
       self.__timestamp = self.__trip.get_service_start_time()
 
     """    
@@ -125,12 +119,8 @@ class Vehicle:
     def service_finish_event_update(self):
         self.__timestamp = self.__trip.get_service_finish_time()
         if self.__aircraft.get_flight().get_category()==1: #离港
-            self.__aircraft.set_status(0) #服务已经完成
-            self.__aircraft.set_qianyin_status(0)
-            self.__aircraft.set_final_departure_timestamp(self.__timestamp+2) #飞机最终实际离开时间戳
-        if self.__aircraft.get_flight().get_category()==0: #到港
-            self.__aircraft.set_qianyin_status(0)
-            self.__aircraft.set_arrive_qianyin_finish_add_timestamp(self.__timestamp+2) #飞机最终在停机位停稳的时间
+            self.__aircraft.set_jiayou_status(0) #服务已经完成
+            self.__aircraft.set_departure_jiayou_finish_timestamp(self.__timestamp) 
     
     def generate_prepare_start_event(self):
         event = VehiclePrepareStartEvent(self)
@@ -138,7 +128,7 @@ class Vehicle:
         self.__current_event = event
         
     def prepare_start_event_update(self):
-        self.__x = 0
+        self.__x = 0 #设车辆统一准备的地点都在0，0
         self.__y = 0
         self.__timestamp = self.__trip.get_prepare_start_time()
         

@@ -1,9 +1,16 @@
 #from ground_handling import GroundHandling
 
 class EventDispatcher:
-    def __init__(self, aircraft_list, vehicle_list, ground_handling):#?ground_handling没用？
+    def __init__(self, aircraft_list, vehicle_list, vehicle_xingli_list, vehicle_jiayou_list, vehicle_baidu_list, vehicle_shipin_list, vehicle_qingshui_list, vehicle_laji_list, vehicle_wushui_list, ground_handling):#?ground_handling没用？
         self.__aircraft_list = aircraft_list
         self.__vehicle_list = vehicle_list
+        self.__vehicle_xingli_list = vehicle_xingli_list
+        self.__vehicle_jiayou_list = vehicle_jiayou_list
+        self.__vehicle_baidu_list = vehicle_baidu_list
+        self.__vehicle_shipin_list = vehicle_shipin_list
+        self.__vehicle_qingshui_list = vehicle_qingshui_list
+        self.__vehicle_laji_list = vehicle_laji_list
+        self.__vehicle_wushui_list = vehicle_wushui_list
         self.__ground_handling = ground_handling
 
     def is_finished(self):
@@ -12,9 +19,43 @@ class EventDispatcher:
                 return False#9
         if self.__vehicle_list is None:
             return True
+        if self.__vehicle_xingli_list is None:
+            return True
+        if self.__vehicle_jiayou_list is None:
+            return True
+        if self.__vehicle_baidu_list is None:
+            return True
+        if self.__vehicle_shipin_list is None:
+            return True
+        if self.__vehicle_qingshui_list is None:
+            return True
+        if self.__vehicle_laji_list is None:
+            return True
+        if self.__vehicle_wushui_list is None:
+            return True
         else:
             for veh in self.__vehicle_list:
-                #if veh.get_trip() is not None:#改为下面
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_xingli_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_jiayou_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_baidu_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_shipin_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_qingshui_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_laji_list:
+                if veh.get_servicestatus() == 1:#在服务中
+                    return False
+            for veh in self.__vehicle_wushui_list:
                 if veh.get_servicestatus() == 1:#在服务中
                     return False
         return True
