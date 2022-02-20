@@ -16,7 +16,7 @@ class Flight:  # 类似原文件中trip
         self.__scheduled_departure_time = scheduled_departure_time  # 预计离开时间
         self.__scheduled_arrival_time = scheduled_arrival_time  # 预计到达时间
         self.__origin = origin  # 出发地
-        self.__destination = destination,  # 目的地
+        self.__destination = destination  # 目的地
         self.__real_departure_time = None  # 实际离开时间，前期用不到
         self.__real_arrival_time = None  # 实际到达时间，前期用不到
         # self.__layover_time = layover_time  # 飞机可以停留时间

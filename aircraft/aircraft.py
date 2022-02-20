@@ -17,7 +17,7 @@ class Aircraft:
         elif self.__flight.get_category() == 0:
             self.generate_arrival_gate_position_event()
 
-    def getAircraftId(self):  # 可以直接调用参数吗？不定义方法
+    def get_aircraft_id(self):  # 可以直接调用参数吗？不定义方法
         return self.__aircraft_id
 
     def getEventList(self):
