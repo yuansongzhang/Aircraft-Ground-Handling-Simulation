@@ -115,40 +115,6 @@ class AircraftArrivalGatePositionEvent(Event):
         return log_info
 
 
-'''
-class AircraftArrivalDelayEvent(Event):
-    def __init__(self, aircraft):
-        super().__init__()
-        self.__aircraft = aircraft
-        self.__estimated_arrival_time = None
-        self.__delay_info_release_time = None
-        self.update()
-
-    def update(self):
-        aircraft = self.__aircraft
-        # post delay information 30 minutes in advance
-        self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time() + aircraft.get_arrival_delay() - 30
-        self.__delay_info_release_time = self._triggering_timestamp
-        self.__estimated_arrival_time = aircraft.get_flight().get_scheduled_arrival_time() + aircraft.get_arrival_delay()
-
-    def execute(self):
-        # updates aircraft.
-        self.__aircraft.set_delay_state()
-        self.__aircraft.arrival_gate_position_event_update()
-
-    def get_log_info(self):
-        log_info = {
-            'event_name': self.__class__.__name__,
-            'triggering_timestamp': self._triggering_timestamp,
-            'aircraft_id': self.__aircraft.get_id(),
-            'delay_info_release_time': self.__delay_info_release_time,
-            'estimated_arrival_time': self.__estimated_arrival_time,
-            'scheduled_arrival_timestamp': self.__aircraft.get_flight().get_scheduled_arrival_time(),
-        }
-        return log_info
-'''
-
-
 class VehicleDepartureGatePositionEvent(Event):
     def __init__(self, vehicle):
         super().__init__()
@@ -241,9 +207,20 @@ class VehicleServiceEvent(Event):
 
     def update(self):
         vehicle = self.__vehicle
-        # todo: random service time
+        # todo: random service time, interaction with aircraft
         self.__service_time = 10
-        self._triggering_timestamp = vehicle.get_trip().get_arrival_time() + self.__service_time
+
+        aircraft = vehicle.get_trip().get_target_aircraft()
+        # interaction with aircraft
+        if aircraft.get_flight().get_category() == 0:
+            # the type of the last flight is arrival
+            if aircraft.get_flight().get_real_arrival_time() is None:
+                self._triggering_timestamp = INFINITY
+            else:
+                self._triggering_timestamp = max(vehicle.get_trip().get_arrival_time(),
+                                                 aircraft.get_flight().get_real_arrival_time()) + self.__service_time
+        else:
+            self._triggering_timestamp = vehicle.get_trip().get_arrival_time() + self.__service_time
 
     def execute(self):
         # updates vehicle.

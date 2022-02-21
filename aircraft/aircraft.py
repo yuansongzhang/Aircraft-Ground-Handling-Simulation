@@ -7,7 +7,7 @@ class Aircraft:
     def __init__(self,
                  aircraft_id,
                  flight: Flight,
-                 arrival_delay
+                 arrival_delay=0
                  ):
         self.__aircraft_id = aircraft_id
         self.__flight = flight
@@ -18,8 +18,8 @@ class Aircraft:
         self.__ground_handling_service_finished_time = None
         self.__ground_handling_service_arrival_time = None
         self.__delay_state = True
-        # post delay info 30 min in advance
-        self.__arrival_delay_release_time = 30
+        # post delay info 60 min in advance
+        self.__arrival_delay_release_time = 60
         self.__arrival_delay = arrival_delay
 
         if self.__flight.get_category() == 1:

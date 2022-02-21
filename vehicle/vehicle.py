@@ -20,6 +20,9 @@ class Vehicle:
     def get_origin(self):
         return self.__origin
 
+    def get_trip_list(self):
+        return self.__trip_list
+
     def set_trip(self, trip):
         self.__trip = trip
 
@@ -32,7 +35,11 @@ class Vehicle:
     def get_last_trip(self):
         if len(self.__trip_list) == 0:
             return None
-        return self.__trip_list[-1]
+        for trip in self.__trip_list[::-1]:
+            if trip.get_cancellation():
+                continue
+            return trip
+        return None
 
     def generate_departure_gate_position_event(self):
         event = VehicleDepartureGatePositionEvent(self)

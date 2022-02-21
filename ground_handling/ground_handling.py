@@ -46,9 +46,22 @@ class GroundHandling:
                 veh_list.append(veh)
         aircraft_list = []
         for aircraft in self.__aircraft_list:
-            # todo: aircraft.get_delay_state()
             if aircraft.get_flight().get_server() is None:
                 aircraft_list.append(aircraft)
+            # todo: aircraft.get_delay_state()
+            elif aircraft.get_delay_state():
+                # virtual arrival event
+                if aircraft.get_flight().get_category() == 1:
+                    continue
+                estimated_arrival_time = aircraft.get_arrival_delay() + aircraft.get_flight().get_scheduled_arrival_time()
+                waiting_time = estimated_arrival_time - self.__dispatch_time
+                if waiting_time > 30 and (self.__dispatch_time + 60) > estimated_arrival_time:
+                    aircraft_list.append(aircraft)
+                    veh = aircraft.get_flight().get_server()
+                    veh_list.append(veh)
+                    veh.get_trip().set_cancellation()
+                    veh.get_trip_list().append(veh.get_trip())
+                    veh.set_trip(None)
         random_match(self.__dispatch_time, veh_list, aircraft_list)
 
     def generate_waiting_event(self):

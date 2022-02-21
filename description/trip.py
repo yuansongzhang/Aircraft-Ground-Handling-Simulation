@@ -17,6 +17,27 @@ class Trip:
         self.__arrival_time = None
         self.__service_time = None
         self.__target_aircraft = target_aircraft
+        self.__cancellation = False
+
+    def get_cancellation(self):
+        return self.__cancellation
+
+    def set_cancellation(self):
+        self.__cancellation = True
+
+    def get_log_info(self):
+        log_info = {
+            'event_name': self.__class__.__name__,
+            'task_release_time': self.__task_release_time,
+            'destination': self.__destination.get_id(),
+            'target_aircraft': self.__target_aircraft.get_id(),
+            'aircraft_scheduled_arrival_time': self.__target_aircraft.get_flight().get_scheduled_arrival_time(),
+            'aircraft_scheduled_departure_time': self.__target_aircraft.get_flight().get_scheduled_departure_time(),
+            'departure_time': self.__departure_time,
+            'arrival_timestamp': self.__arrival_time,
+            'service_time': self.__service_time
+        }
+        return log_info
 
     def set_arrival_time(self, arrival_time):
         self.__arrival_time = arrival_time
