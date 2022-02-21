@@ -27,14 +27,24 @@ class Aircraft:
         elif self.__flight.get_category() == 0:
             self.generate_arrival_gate_position_event()
 
-    def get_delay_state(self):
-        return self.__delay_state
-
-    def get_arrival_delay(self):
-        return self.__arrival_delay
-
-    def get_ground_handling_service_arrival_time(self):
-        return self.__ground_handling_service_arrival_time
+    def get_log_info(self):
+        log_info = {
+            'name': self.__class__.__name__,
+            'aircraft_id': self.__aircraft_id,
+            'flight_category': self.__flight.get_category(),
+            'origin': self.__flight.get_origin().get_id() if self.__flight.get_origin() is not None else None,
+            'destination': self.__flight.get_destination().get_id() if self.__flight.get_destination() is not None else None,
+            'scheduled_departure_time': self.__flight.get_scheduled_departure_time(),
+            'scheduled_arrival_time': self.__flight.get_scheduled_arrival_time(),
+            'real_departure_time': self.__flight.get_real_departure_time(),
+            'real_arrival_time': self.__flight.get_real_arrival_time(),
+            'arrival_delay': self.__arrival_delay,
+            'service_vehicle_id': self.__flight.get_server().get_id(),
+            'ground_handling_service_state': self.__ground_handling_service_state,
+            'ground_handling_service_finished_time': self.__ground_handling_service_finished_time,
+            'ground_handling_service_arrival_time': self.__ground_handling_service_arrival_time
+        }
+        return log_info
 
     def set_ground_handling_service_arrival_time(self, arrival_time):
         self.__ground_handling_service_arrival_time = arrival_time
@@ -62,6 +72,15 @@ class Aircraft:
 
     def get_flight(self):
         return self.__flight
+
+    def get_delay_state(self):
+        return self.__delay_state
+
+    def get_arrival_delay(self):
+        return self.__arrival_delay
+
+    def get_ground_handling_service_arrival_time(self):
+        return self.__ground_handling_service_arrival_time
 
     def generate_departure_gate_position_event(self):
         event = AircraftDepartureGatePositionEvent(self)

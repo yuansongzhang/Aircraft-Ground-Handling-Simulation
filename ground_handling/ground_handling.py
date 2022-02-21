@@ -15,12 +15,6 @@ class GroundHandling:
         self.__current_event = None
         self.generate_dispatch_event()
 
-    def get_dispatch_time(self):
-        return self.__dispatch_time
-
-    def get_current_event(self):
-        return self.__current_event
-
     def set_dispatch_time(self, dispatch_time):
         self.__dispatch_time = dispatch_time
 
@@ -32,6 +26,12 @@ class GroundHandling:
 
     def get_dispatch_interval(self):
         return self.__dispatch_interval
+
+    def get_dispatch_time(self):
+        return self.__dispatch_time
+
+    def get_current_event(self):
+        return self.__current_event
 
     def generate_dispatch_event(self):
         event = GroundHandlingDispatchEvent(self)
@@ -48,7 +48,6 @@ class GroundHandling:
         for aircraft in self.__aircraft_list:
             if aircraft.get_flight().get_server() is None:
                 aircraft_list.append(aircraft)
-            # todo: aircraft.get_delay_state()
             elif aircraft.get_delay_state():
                 # virtual arrival event
                 if aircraft.get_flight().get_category() == 1:

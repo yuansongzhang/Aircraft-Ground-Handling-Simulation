@@ -19,14 +19,14 @@ def generate_instances(filename):
 
     for row_id, row in df.iterrows():
         if row['flight_type'] == 'A':
-            flight = Flight(category=0,  # Arrival
+            flight = Flight(category=0,  # arrival
                             scheduled_departure_time=None,
                             scheduled_arrival_time=row['scheduled_timestamp'],
                             origin=virtual_gate_position,
                             destination=gate_position_dict[str(row['gate_position'])],
                             )
         else:
-            flight = Flight(category=1,  # Departure
+            flight = Flight(category=1,  # departure
                             scheduled_departure_time=row['scheduled_timestamp'],
                             scheduled_arrival_time=None,
                             origin=gate_position_dict[str(row['gate_position'])],

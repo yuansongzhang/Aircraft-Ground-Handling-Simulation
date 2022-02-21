@@ -7,12 +7,14 @@ from common import VehicleArrivalGatePositionEvent
 class Vehicle:
     def __init__(self, origin, id=None):
         self.__origin = origin
-        self.__service_time = None
         self.__trip_list = []
         self.__trip = None
         self.__event_list = list()
         self.__current_event = None
         self.__id = id
+
+    def set_trip(self, trip):
+        self.__trip = trip
 
     def get_id(self):
         return self.__id
@@ -22,9 +24,6 @@ class Vehicle:
 
     def get_trip_list(self):
         return self.__trip_list
-
-    def set_trip(self, trip):
-        self.__trip = trip
 
     def get_trip(self):
         return self.__trip

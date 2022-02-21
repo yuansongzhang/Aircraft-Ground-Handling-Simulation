@@ -1,31 +1,38 @@
 # Aircraft-Ground-Handling-Simulation
 
 ## Todo
-- Framework
 
-![](./docs/pic/framework.jpg)
+- Processes design
 
-### Task1
-- Python代码遵从PEP8风格
-- 包名小写
-- 模块：小写
-- 类名：大写驼峰
-- 函数：小写 + _
-- 参数：, \ =
-- 私有成员：__name
+![](./docs/pic/AGHS-Flow-Diagram-Processes.png)
 
-### Task2
-- 根据历史航班数据生成Aircraft实例
-- 每次使用一天的航班数据
-- 具体在util的reader实现，并形成测试代码
+- the flight without the service of a ground handling vehicle cannot depart from the gate position and then a delay
+  occurs.
+- the flight without a vehicle to serve cannot arrive at the gate position and then a delay occurs.
 
-### Task3
-- 最小case测试
-- 日志记录
+### Task1: extend functions of the simulation
 
-### Task4
-- 航班是否被服务标记
-- 航班延误考虑，延误发布后的二次匹配
-- 随机变量替代常数
-- 多种车辆扩展
-- 触发时间一致时的细节处理
+- replace the constant with random variable
+- implement multiple vehicles
+
+### Task2: determine parameters of the simulation
+
+- the scheduled and real information of flights ✔
+- the spatial distribution of gate positions
+- the service time of different vehicles
+- the fleet size
+- the vehicle speed
+- the release time of delay information
+
+## How to run a simulation?
+- run the below command
+```bash
+python main.py
+```
+
+- then the **output** directory containing several log files will be generated, as following
+
+![](./docs/pic/log-files.png)
+
+- among these log files, *Flights.csv* and *VehicleTrips.csv* are the most important, 
+- which can be used to analyze the performance of the dispatching algorithm.
