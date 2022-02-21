@@ -52,5 +52,5 @@ class Flight:  # 类似原文件中trip
     def getRealDepartureTime(self):
         return self.__real_departure_time
 
-    def getRealArrivalTime(self):
+    def get_real_arrival_time(self):
         return self.__real_arrival_time

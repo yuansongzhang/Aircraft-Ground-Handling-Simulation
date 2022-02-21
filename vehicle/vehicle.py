@@ -29,6 +29,11 @@ class Vehicle:
     def get_current_event(self):
         return self.__current_event
 
+    def get_last_trip(self):
+        if len(self.__trip_list) == 0:
+            return None
+        return self.__trip_list[-1]
+
     def generate_departure_gate_position_event(self):
         event = VehicleDepartureGatePositionEvent(self)
         self.__event_list.append(event)
@@ -46,6 +51,8 @@ class Vehicle:
 
     def arrival_gate_position_event_update(self):
         self.__origin = self.__trip.get_destination()
+        if self.get_trip().get_target_aircraft().get_flight().get_category() == 0:
+            self.get_trip().get_target_aircraft().set_ground_handling_service_state()
 
     def generate_service_event(self):
         event = VehicleServiceEvent(self)
@@ -54,5 +61,7 @@ class Vehicle:
         self.__current_event = event
 
     def service_event_update(self):
+        if self.get_trip().get_target_aircraft().get_flight().get_category() == 1:
+            self.get_trip().get_target_aircraft().set_ground_handling_service_state()
         self.__trip_list.append(self.__trip)
         self.__trip = None

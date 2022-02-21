@@ -11,9 +11,8 @@ def generate_instances(filename):
 
     gate_position_dict = {}
     aircraft_list = []
-    vehicle_list = []
 
-    virtual_gate_position = GatePosition('Virtual', 0, '001')
+    virtual_gate_position = GatePosition('Virtual', 0, 'virtual')
     for gate_position_id in df['gate_position'].unique():
         gate_position = GatePosition('PD', 0, str(gate_position_id))
         gate_position_dict[str(gate_position_id)] = gate_position
@@ -22,18 +21,18 @@ def generate_instances(filename):
         if row['flight_type'] == 'A':
             flight = Flight(category=0,  # Arrival
                             scheduled_departure_time=None,
-                            scheduled_arrival_time=row['scheduled_time'],
+                            scheduled_arrival_time=row['scheduled_timestamp'],
                             origin=virtual_gate_position,
                             destination=gate_position_dict[str(row['gate_position'])],
                             )
         else:
             flight = Flight(category=1,  # Departure
-                            scheduled_departure_time=row['scheduled_time'],
+                            scheduled_departure_time=row['scheduled_timestamp'],
                             scheduled_arrival_time=None,
                             origin=gate_position_dict[str(row['gate_position'])],
                             destination=virtual_gate_position,
                             )
-        aircraft = Aircraft(aircraft_id=row['flight_id'], flight=flight)
+        aircraft = Aircraft(aircraft_id=row['flight_id'], flight=flight, arrival_delay=row['delay_time'])
         aircraft_list.append(aircraft)
 
     vehicle_list = []

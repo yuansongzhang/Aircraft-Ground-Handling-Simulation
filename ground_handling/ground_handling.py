@@ -46,6 +46,7 @@ class GroundHandling:
                 veh_list.append(veh)
         aircraft_list = []
         for aircraft in self.__aircraft_list:
+            # todo: aircraft.get_delay_state()
             if aircraft.get_flight().get_server() is None:
                 aircraft_list.append(aircraft)
         random_match(self.__dispatch_time, veh_list, aircraft_list)

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta, abstractmethod
 
+INFINITY = 10 ** 10
+
 
 class Event:
     __meta_class__ = ABCMeta
@@ -34,8 +36,13 @@ class AircraftDepartureGatePositionEvent(Event):
 
     def update(self):
         aircraft = self.__aircraft
-        # todo: interaction with vehicles, random travel time
-        self._triggering_timestamp = aircraft.get_flight().get_scheduled_departure_time()
+        # todo: random travel time
+        if aircraft.get_ground_handling_service_state():  # interaction with vehicles
+            assert aircraft.get_ground_handling_service_finished_time() is not None
+            self._triggering_timestamp = max(aircraft.get_flight().get_scheduled_departure_time(),
+                                             aircraft.get_ground_handling_service_finished_time())
+        else:
+            self._triggering_timestamp = INFINITY
         self.__departure_gate_position = aircraft.get_flight().get_origin()
         self.__departure_timestamp = self._triggering_timestamp
 
@@ -50,9 +57,10 @@ class AircraftDepartureGatePositionEvent(Event):
         log_info = {
             'event_name': self.__class__.__name__,
             'triggering_timestamp': self._triggering_timestamp,
-            'aircraft_id': self.__aircraft.get_aircraft_id(),
+            'aircraft_id': self.__aircraft.get_id(),
             'departure_gate_position_id': self.__departure_gate_position.get_id(),
             'departure_timestamp': self.__departure_timestamp,
+            'scheduled_departure_timestamp': self.__aircraft.get_flight().get_scheduled_departure_time(),
         }
         return log_info
 
@@ -67,12 +75,23 @@ class AircraftArrivalGatePositionEvent(Event):
 
     def update(self):
         aircraft = self.__aircraft
-        # todo: interaction with vehicles
         if aircraft.get_flight().get_category() == 1:
+            # all flights end with a AircraftArrivalGatePositionEvent
             self._triggering_timestamp = aircraft.get_flight().get_scheduled_departure_time()
         else:
-            self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time()
+            # interaction with vehicles
+            if aircraft.get_ground_handling_service_state():
+                self._triggering_timestamp = max(aircraft.get_flight().get_scheduled_arrival_time(),
+                                                 aircraft.get_ground_handling_service_arrival_time())
+            else:
+                self._triggering_timestamp = INFINITY
+            # todo: random arrival delay
+            if aircraft.get_delay_state():
+                self._triggering_timestamp = max(
+                    aircraft.get_flight().get_scheduled_arrival_time() + aircraft.get_arrival_delay(),
+                    self._triggering_timestamp)
         assert self._triggering_timestamp is not None
+
         self.__arrival_gate_position = aircraft.get_flight().get_destination()
         self.__arrival_timestamp = self._triggering_timestamp
 
@@ -86,11 +105,48 @@ class AircraftArrivalGatePositionEvent(Event):
         log_info = {
             'event_name': self.__class__.__name__,
             'triggering_timestamp': self._triggering_timestamp,
-            'aircraft_id': self.__aircraft.get_aircraft_id(),
+            'aircraft_id': self.__aircraft.get_id(),
             'arrival_gate_position_id': self.__arrival_gate_position.get_id(),
             'arrival_timestamp': self.__arrival_timestamp,
+            'scheduled_arrival_timestamp': self.__aircraft.get_flight().get_scheduled_arrival_time(),
+            'delay_state': self.__aircraft.get_delay_state(),
+            'delay_time': self.__aircraft.get_arrival_delay()
         }
         return log_info
+
+
+'''
+class AircraftArrivalDelayEvent(Event):
+    def __init__(self, aircraft):
+        super().__init__()
+        self.__aircraft = aircraft
+        self.__estimated_arrival_time = None
+        self.__delay_info_release_time = None
+        self.update()
+
+    def update(self):
+        aircraft = self.__aircraft
+        # post delay information 30 minutes in advance
+        self._triggering_timestamp = aircraft.get_flight().get_scheduled_arrival_time() + aircraft.get_arrival_delay() - 30
+        self.__delay_info_release_time = self._triggering_timestamp
+        self.__estimated_arrival_time = aircraft.get_flight().get_scheduled_arrival_time() + aircraft.get_arrival_delay()
+
+    def execute(self):
+        # updates aircraft.
+        self.__aircraft.set_delay_state()
+        self.__aircraft.arrival_gate_position_event_update()
+
+    def get_log_info(self):
+        log_info = {
+            'event_name': self.__class__.__name__,
+            'triggering_timestamp': self._triggering_timestamp,
+            'aircraft_id': self.__aircraft.get_id(),
+            'delay_info_release_time': self.__delay_info_release_time,
+            'estimated_arrival_time': self.__estimated_arrival_time,
+            'scheduled_arrival_timestamp': self.__aircraft.get_flight().get_scheduled_arrival_time(),
+        }
+        return log_info
+'''
 
 
 class VehicleDepartureGatePositionEvent(Event):
@@ -99,12 +155,26 @@ class VehicleDepartureGatePositionEvent(Event):
         self.__vehicle = vehicle
         self.__departure_gate_position = None
         self.__departure_timestamp = None
+        self.__release_timestamp = None
         self.update()
 
     def update(self):
         vehicle = self.__vehicle
-        # todo: interaction with aircraft
-        self._triggering_timestamp = vehicle.get_trip().get_task_release_time()
+        self.__release_timestamp = vehicle.get_trip().get_task_release_time()
+        if vehicle.get_last_trip() is None:
+            self._triggering_timestamp = vehicle.get_trip().get_task_release_time()
+        else:
+            aircraft = vehicle.get_last_trip().get_target_aircraft()
+            # interaction with aircraft
+            if aircraft.get_flight().get_category() == 0:
+                # the type of the last flight is arrival
+                if aircraft.get_flight().get_real_arrival_time() is None:
+                    self._triggering_timestamp = INFINITY
+                else:
+                    self._triggering_timestamp = max(vehicle.get_trip().get_task_release_time(),
+                                                     aircraft.get_flight().get_real_arrival_time())
+            else:
+                self._triggering_timestamp = vehicle.get_trip().get_task_release_time()
         self.__departure_gate_position = vehicle.get_origin()
         self.__departure_timestamp = self._triggering_timestamp
 
@@ -122,6 +192,7 @@ class VehicleDepartureGatePositionEvent(Event):
             'vehicle_id': self.__vehicle.get_id(),
             'departure_gate_position_id': self.__departure_gate_position.get_id(),
             'departure_timestamp': self.__departure_timestamp,
+            'task_release_time': self.__release_timestamp
         }
         return log_info
 
@@ -144,6 +215,8 @@ class VehicleArrivalGatePositionEvent(Event):
     def execute(self):
         # updates vehicle.
         self.__vehicle.get_trip().set_arrival_time(self.__arrival_timestamp)
+        self.__vehicle.get_trip().get_target_aircraft().set_ground_handling_service_arrival_time(
+            self.__arrival_timestamp)
         self.__vehicle.arrival_gate_position_event_update()
         # generates next event.
         self.__vehicle.generate_service_event()
@@ -175,6 +248,8 @@ class VehicleServiceEvent(Event):
     def execute(self):
         # updates vehicle.
         self.__vehicle.get_trip().set_service_time(self.__service_time)
+        self.__vehicle.get_trip().get_target_aircraft().set_ground_handling_service_finished_time(
+            self._triggering_timestamp)
         self.__vehicle.service_event_update()
         # finishes the current trip and does not generate any event.
 

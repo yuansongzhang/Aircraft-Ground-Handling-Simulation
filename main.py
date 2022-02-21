@@ -62,13 +62,15 @@ def get_all_instances():
 def main():
     """The unit of time is minute and simulation starts at 0 time."""
     # gate_position_list, aircraft_list, vehicle_list = get_all_instances()
-    gate_position_list, aircraft_list, vehicle_list = generate_instances('./data/one_day_test_data.csv')
+    # gate_position_list, aircraft_list, vehicle_list = generate_instances('./data/one_day_test_data.csv')
+    gate_position_list, aircraft_list, vehicle_list = generate_instances('./data/one_day_test_data_including_delay.csv')
     ground_handling = GroundHandling(aircraft_list, vehicle_list)
     event_dispatcher = EventDispatcher(aircraft_list, vehicle_list, ground_handling)
 
     event_list = []
     while not event_dispatcher.is_finished():
         first_event = None
+        # todo: deal with events triggered at the same time
         for aircraft in aircraft_list:
             event = aircraft.get_current_event()
             if event is None:

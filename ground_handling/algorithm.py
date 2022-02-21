@@ -11,10 +11,12 @@ def random_match(task_release_time, vehicle_list: list, aircraft_list: list):
                 continue
             if aircraft.get_flight().get_category() == 1:
                 new_trip = Trip(task_release_time=task_release_time,
-                                destination=aircraft.get_flight().get_origin())
+                                destination=aircraft.get_flight().get_origin(),
+                                target_aircraft=aircraft)
             else:
                 new_trip = Trip(task_release_time=task_release_time,
-                                destination=aircraft.get_flight().get_destination())
+                                destination=aircraft.get_flight().get_destination(),
+                                target_aircraft=aircraft)
             vehicle.set_trip(new_trip)
             vehicle.generate_departure_gate_position_event()
             aircraft.get_flight().set_server(server=vehicle)
